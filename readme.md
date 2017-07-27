@@ -23,3 +23,5 @@ cd cap-android
 执行如下脚本:
 sh run.sh
 ```
+## 打开网页
+在网页中输入 [localhost:9002](localhost:9002) 就能看到屏幕实时投影了。
