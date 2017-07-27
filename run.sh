@@ -1,1 +1,7 @@
-sh init.sh & sh forward.sh
+sh init.sh & {
+	sleep 1
+	sh forward.sh 
+} & {
+	sleep 2
+	sh start-web.sh
+}

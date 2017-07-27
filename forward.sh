@@ -1,1 +1,1 @@
-adb forward tcpip:1717 localabstract:minicap
+adb forward tcp:1717 localabstract:minicap
