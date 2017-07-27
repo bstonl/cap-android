@@ -21,5 +21,5 @@ Installed as /usr/local/bin/adb
 在终端进入到工程目录
 cd cap-android
 执行如下脚本:
-sh ./run.sh
+sh run.sh
 ```
