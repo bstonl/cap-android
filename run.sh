@@ -4,4 +4,7 @@ sh init.sh & {
 } & {
 	sleep 2
 	sh start-web.sh
+} & {
+	sleep 1
+	sh touch.sh
 }

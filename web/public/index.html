@@ -1,17 +1,35 @@
 <!doctype html>
-<canvas id="canvas" style="border: 1px solid red;"></canvas>
+<canvas id="live.player" style="border: 1px solid red;"></canvas>
 
-<script>
+
+<script src="./lib/jquery.min.js"></script>
+<script src='./lib/bootstrap.min.js'></script>
+<script src='./main.js'></script>
+<script src='./touch.js'></script>
+
+<script >
 /*jshint browser:true*/
+
 
 var BLANK_IMG =
   'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
-var canvas = document.getElementById('canvas')
+var canvas = document.getElementById('live.player')
   , g = canvas.getContext('2d')
 
 var ws = new WebSocket('ws://localhost:9002', 'minicap')
 ws.binaryType = 'blob'
+
+var EVENT_SENDER = {}
+
+EVENT_SENDER.sendEvent = function (event) {
+    if (ws) {
+      ws.send(event)
+    }
+  }
+
+
+evenSender = EVENT_SENDER;
 
 ws.onclose = function() {
   console.log('onclose', arguments)
@@ -21,11 +39,18 @@ ws.onerror = function() {
   console.log('onerror', arguments)
 }
 
+var inited = false;
+
 ws.onmessage = function(message) {
   var blob = new Blob([message.data], {type: 'image/jpeg'})
   var URL = window.URL || window.webkitURL
   var img = new Image()
   img.onload = function() {
+    if (! inited) {
+      initDeviceView(canvas, img.width, img.height);
+      initTouch(ws);
+      inited = true;
+    }
     console.log(img.width, img.height)
     canvas.width = img.width
     canvas.height = img.height
@@ -42,7 +67,7 @@ ws.onmessage = function(message) {
 
 ws.onopen = function() {
   console.log('onopen', arguments)
-  ws.send('1920x1080/0')
+  //ws.send('1920x1080/0')
 }
 
 </script>

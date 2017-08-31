@@ -4,6 +4,7 @@ var WebSocketServer = require('ws').Server
   , path = require('path')
   , net = require('net')
   , app = express()
+  , DeviceController = require('./device-controller')
 
 var PORT = process.env.PORT || 9002
 
@@ -18,6 +19,13 @@ wss.on('connection', function(ws) {
   var stream = net.connect({
     port: 1717
   })
+  
+
+   var controlSocket = net.connect({
+    port: 1718
+  })
+
+  var deviceController = new DeviceController(controlSocket, {})
 
   stream.on('error', function() {
     console.error('Be sure to run `adb forward tcp:1717 localabstract:minicap`')
@@ -43,7 +51,7 @@ wss.on('connection', function(ws) {
 
   function tryRead() {
     for (var chunk; (chunk = stream.read());) {
-      console.info('chunk(length=%d)', chunk.length)
+      //console.info('chunk(length=%d)', chunk.length)
       for (var cursor = 0, len = chunk.length; cursor < len;) {
         if (readBannerBytes < bannerLength) {
           switch (readBannerBytes) {
@@ -109,6 +117,7 @@ wss.on('connection', function(ws) {
           readBannerBytes += 1
 
           if (readBannerBytes === bannerLength) {
+            ws.send(JSON.stringify(banner));
             console.log('banner', banner)
           }
         }
@@ -116,11 +125,11 @@ wss.on('connection', function(ws) {
           frameBodyLength += (chunk[cursor] << (readFrameBytes * 8)) >>> 0
           cursor += 1
           readFrameBytes += 1
-          console.info('headerbyte%d(val=%d)', readFrameBytes, frameBodyLength)
+          //console.info('headerbyte%d(val=%d)', readFrameBytes, frameBodyLength)
         }
         else {
           if (len - cursor >= frameBodyLength) {
-            console.info('bodyfin(len=%d,cursor=%d)', frameBodyLength, cursor)
+            //console.info('bodyfin(len=%d,cursor=%d)', frameBodyLength, cursor)
 
             frameBody = Buffer.concat([
               frameBody
@@ -143,7 +152,7 @@ wss.on('connection', function(ws) {
             frameBody = new Buffer(0)
           }
           else {
-            console.info('body(len=%d)', len - cursor)
+            //console.info('body(len=%d)', len - cursor)
 
             frameBody = Buffer.concat([
               frameBody
@@ -161,11 +170,28 @@ wss.on('connection', function(ws) {
 
   stream.on('readable', tryRead)
 
+  /**
+  * 转发web page控制指令 
+  */
+  ws.on('message', function(data) {
+      console.log('msg from page:', data)
+      var obj = JSON.parse(data)
+      var type = obj.type;
+      var x =  obj.x;
+      var y = obj.y;
+      if (type === "mousedown") {
+        deviceController.onDown(x, y);
+      } else if (type === "mouseup"){
+        deviceController.onUp(x, y);
+      } else if (type === "mousemove") {
+        deviceController.onMove(x, y);
+      }
+  })
+
   ws.on('close', function() {
     console.info('Lost a client')
     stream.end()
   })
 })
-
 server.listen(PORT)
 console.info('Listening on port %d', PORT)
