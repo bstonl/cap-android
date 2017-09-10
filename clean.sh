@@ -1,4 +1,9 @@
-LIST=$(ps|grep ^'node|sh'|awk '{print $1}')
+CAP_PIDS=$(adb shell ps|grep mini|awk '{print $2}')
+for cap_pid in $CAP_PIDS
+	do
+		adb shell kill -9 $cap_pid
+	done
+LIST=$(ps|grep node|awk '{print $1}')
 echo $LIST
 for pid in $LIST
 	do

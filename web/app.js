@@ -186,6 +186,18 @@ wss.on('connection', function(ws) {
         deviceController.onUp(x, y);
       } else if (type === "mousemove") {
         deviceController.onMove(x, y);
+      } else if (type === "keyevent") {
+        var event = obj.value;
+        if (event === "home") {
+          console.log("home")
+            deviceController.onHome();
+        } else if (event === "back") {
+          console.log("back");
+            deviceController.onBack();
+        } else if (event ==="menu") {
+          console.log('menu');
+            deviceController.onMenu();
+        }
       }
   })
 

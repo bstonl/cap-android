@@ -203,16 +203,13 @@ function initMainMenus() {
     menuBtn.addEventListener("click", onMenu, false)
 }
 
-function sendEvent(sendEvent) {
-      touchWs.send(JSON.stringfy(sendEvent));
-  }
-
 function sendEvent(event) {
     if (touchWs) {
         touchWs.send(JSON.stringify({
             type: event.type,
             x: event.clientX,
-            y: event.clientY
+            y: event.clientY,
+            value: event.value
         }));
     }
 }

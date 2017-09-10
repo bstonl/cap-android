@@ -28,7 +28,7 @@ function initDeviceView(canvas, width, height){
 
     var div = document.createElement('div');
     div.style.width = width + 'px';
-    div.style.height = height + 'px';
+    div.style.height = (height + 40) + 'px';
     div.style.position = 'relative';
     div.id = 'qDeviceController';
     div.appendChild(canvas);
@@ -40,7 +40,7 @@ function initDeviceView(canvas, width, height){
         div2.style.position = 'relative';
         div2.style.top =  height + 'px';
 
-        var back = document.createElement("span");
+        var back = document.createElement("button");
         back.id = 'qDeviceBack';
         back.style.width = 90 + 'px';
         back.style.fontSize = 20 + 'px';
@@ -48,7 +48,7 @@ function initDeviceView(canvas, width, height){
         back.className = 'glyphicon glyphicon-circle-arrow-left';
         div2.appendChild(back);
 
-        var home = document.createElement("span");
+        var home = document.createElement("button");
         home.id = 'qDeviceHome';
         home.style.width = 90 + 'px';
         home.style.fontSize = 20 + 'px';
@@ -56,7 +56,7 @@ function initDeviceView(canvas, width, height){
         home.className = 'glyphicon glyphicon-home';
         div2.appendChild(home);
 
-        var menu = document.createElement("span");
+        var menu = document.createElement("button");
         menu.id = 'qDeviceMenu';
         menu.style.width = 90 + 'px';
         menu.style.fontSize = 20 + 'px';
