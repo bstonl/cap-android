@@ -177,8 +177,9 @@ wss.on('connection', function(ws) {
       console.log('msg from page:', data)
       var obj = JSON.parse(data)
       var type = obj.type;
-      var x =  obj.x;
-      var y = obj.y;
+      var x =  Math.floor(obj.x);
+      var y = Math.floor(obj.y);
+      console.log('x:%s y:%s', x, y)
       if (type === "mousedown") {
         deviceController.onDown(x, y);
       } else if (type === "mouseup"){
