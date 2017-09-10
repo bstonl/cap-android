@@ -3,7 +3,7 @@ for cap_pid in $CAP_PIDS
 	do
 		adb shell kill -9 $cap_pid
 	done
-LIST=$(ps|grep node|awk '{print $1}')
+LIST=$(ps c|grep node|awk '{print $1}')
 echo $LIST
 for pid in $LIST
 	do

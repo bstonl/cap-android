@@ -1,4 +1,4 @@
-sh init.sh & {
+sh clean.sh && sh init.sh & {
 	sleep 1
 	sh forward.sh 
 } & {
